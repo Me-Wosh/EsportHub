@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/EsportHub.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EsportHub.IntegrationTests/EsportHub.IntegrationTests.csproj" />
+    <Project Path="tests/EsportHub.UnitTests/EsportHub.UnitTests.csproj" />
+  </Folder>
+</Solution>
