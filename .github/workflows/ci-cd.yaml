@@ -1,0 +1,41 @@
+name: EsportHub CI/CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  ci_base:
+    uses: ./.github/workflows/ci-base.yaml
+  
+  deploy:
+    needs: ci_base
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Render
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl -X POST "$DEPLOY_HOOK"
+
+      - name: Deployment health check
+        timeout-minutes: 10
+        run: |
+          URL="https://esporthub-lpx3.onrender.com/healthz"
+          TIMEOUT=600
+          INTERVAL=30
+          ELAPSED=0
+          
+          while [ $ELAPSED -lt $TIMEOUT ]; do
+            sleep 30
+
+            STATUS=$(curl -s -m 5 -o /dev/null -w "%{http_code}" $URL || true)
+            if [ $STATUS -eq 200 ]; then
+              exit 0
+            fi
+
+            ELAPSED=$((ELAPSED + INTERVAL))
+          done
+
+          exit 1
