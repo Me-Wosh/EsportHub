@@ -1,0 +1,11 @@
+# Local VS Code development setup
+FROM mcr.microsoft.com/dotnet/sdk:10.0@sha256:c0790639332692a0d56cdd81ed581cfd24d040d9839764c138994866df89a3b6 AS dev
+WORKDIR /app/src
+
+# Install curl and download vsdbg to /remote_debugger
+RUN apt-get update && apt-get install -y curl \
+    && curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /remote_debugger \
+    && rm -rf /var/lib/apt/lists/*
+
+# Keep the container alive by running the app in development mode
+CMD ["dotnet", "watch", "run", "--configuration", "Debug", "--urls", "http://+:80;https://+:443"]

@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+**/publish/
+**/Logs/
+**/appsettings.Development.json
+tests/
+
+Dockerfile
+.dockerignore
+
+**/.vscode/
+
+**/.DS_Store
