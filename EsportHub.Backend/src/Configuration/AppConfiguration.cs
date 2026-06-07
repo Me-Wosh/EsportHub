@@ -2,7 +2,7 @@ namespace EsportHub.Configuration;
 
 public static class AppConfiguration
 {
-    extension (WebApplication app)
+    extension(WebApplication app)
     {
         public void ConfigureApp()
         {
@@ -11,7 +11,7 @@ public static class AppConfiguration
 
             if (app.Environment.IsProduction())
                 app.UseExceptionHandler();
-            
+
             app.UseHttpsRedirection();
             app.MapHealthChecks("/healthz");
             app.MapEndpoints();

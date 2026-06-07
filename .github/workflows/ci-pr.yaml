@@ -1,0 +1,8 @@
+name: Pull request CI
+
+on:
+  pull_request:
+
+jobs:
+  ci_base:
+    uses: ./.github/workflows/ci-base.yaml
