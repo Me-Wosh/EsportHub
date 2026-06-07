@@ -5,7 +5,7 @@ namespace EsportHub.Configuration;
 
 public static class StartupConfiguration
 {
-    extension (WebApplication app)
+    extension(WebApplication app)
     {
         public void ConfigureStartup()
         {

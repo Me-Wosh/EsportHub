@@ -70,10 +70,10 @@ public class ArdalisResultMapperTests
 
         var invalidJsonResult = Assert.IsType<JsonHttpResult<Ardalis.Result.IResult>>(invalidResult);
         Assert.Equal(StatusCodes.Status400BadRequest, invalidJsonResult.StatusCode);
-        
+
         var notFoundJsonResult = Assert.IsType<JsonHttpResult<Ardalis.Result.IResult>>(notFoundResult);
         Assert.Equal(StatusCodes.Status404NotFound, notFoundJsonResult.StatusCode);
-        
+
         var noContentJsonResult = Assert.IsType<JsonHttpResult<Ardalis.Result.IResult>>(noContentResult);
         Assert.Equal(StatusCodes.Status204NoContent, noContentJsonResult.StatusCode);
 

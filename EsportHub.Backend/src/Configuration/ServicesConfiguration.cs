@@ -6,7 +6,7 @@ namespace EsportHub.Configuration;
 
 public static class ServicesConfiguration
 {
-    extension (IServiceCollection services)
+    extension(IServiceCollection services)
     {
         public void AddServices(WebApplicationBuilder builder)
         {
