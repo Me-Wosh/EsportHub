@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:18.4-alpine@sha256:96d56f7f57c6aacd1fcb908bc83b345ec5f83231ee486dd66a1baadce274db88
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_vol:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -d ${POSTGRES_DB}
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+  
+  web:
+    build: 
+      context: .
+      dockerfile: ./EsportHub.Backend/Dockerfile.dev
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${HTTPS_CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/esporthub.pfx
+      - ConnectionStrings__EsportHubDb=${EsportHubDb_DockerConnectionString}
+    volumes:
+      - ~/.aspnet/https:/https:ro
+      - ./EsportHub.Backend:/app
+    healthcheck:
+      test: curl -f http://localhost/healthz || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  postgres_vol:
