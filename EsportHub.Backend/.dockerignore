@@ -3,9 +3,13 @@
 **/publish/
 **/Logs/
 **/appsettings.Development.json
+**/docs/
 tests/
+coveragereport/
+coverlet.runsettings
 
 Dockerfile
+Dockerfile.dev
 .dockerignore
 
 **/.vscode/
