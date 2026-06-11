@@ -14,13 +14,13 @@ A Tournament is the core entity that orchestrates the entire event. It oversees 
 
 - **State Mechanics**: 
 
-  - The tournament starts in the `Being Prepared` state.
+  - The tournament starts in the `InPreparation` state.
 
-  - Starting the tournament immediately marks the `StartDate` and automatically transitions the state to `Group Stage`.
+  - Starting the tournament immediately marks the `StartDate` and automatically transitions the state to `GroupStage`.
 
-  - Closing the group stage automatically transitions the state to `Knockout Stage`.
+  - Closing the group stage automatically transitions the state to `KnockoutStage`.
 
-  - The tournament state is automatically changed to `Finished` when the final game in the Knockout stage is resolved.
+  - The tournament state is automatically changed to `Finished` when the final match in the Knockout stage is resolved.
 
 ## Entity
 
@@ -31,4 +31,6 @@ A Tournament is the core entity that orchestrates the entire event. It oversees 
 |`UpdatedAt`|DateTime|Derived from BaseEntity|
 |`Name`|String|Required, Max Length: 100|
 |`StartDate`|DateTime|Nullable|
-|`Status`|Enum|Values: Being Prepared, Group Stage, Knockout Stage, Finished. Default: Being Prepared|
+|`Status`|Enum|Values: InPreparation, GroupStage, KnockoutStage, Finished. Default: InPreparation|
+|`GroupStage`|GroupStage|Nullable, navigation to the GroupStage entity|
+|`KnockoutStage`|KnockoutStage|Nullable, navigation to the KnockoutStage entity|
