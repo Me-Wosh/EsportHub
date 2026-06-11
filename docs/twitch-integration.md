@@ -2,7 +2,7 @@
 
 ## Description
 
-Application integrates with Twitch API to create clips and schedule recurring segments. Integration with Twitch is just an additional feature and is not required by the application in order for it to work. Base features of the application such as creating tournaments and managing games don't depend on this integration.
+Application integrates with Twitch API to create clips and schedule recurring segments. Integration with Twitch is just an additional feature and is not required by the application in order for it to work. Base features of the application such as creating tournaments and managing matches don't depend on this integration.
 
 ## Elements of integration
 

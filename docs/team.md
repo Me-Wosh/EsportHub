@@ -20,6 +20,7 @@ A Team represents a group of players competing in the tournament. Teams and thei
 |`CreatedAt`|DateTime|Derived from BaseEntity|
 |`UpdatedAt`|DateTime|Derived from BaseEntity|
 |`Name`|String|Required, Max Length: 100|
+|`TournamentId`|GUID|Foreign key to Tournament entity|
 |`Players`|Collection|Collection of Player entities|
 
 ### Player (Sub-Entity)
