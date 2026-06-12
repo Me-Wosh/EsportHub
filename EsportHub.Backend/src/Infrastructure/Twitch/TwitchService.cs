@@ -56,7 +56,7 @@ public class TwitchService(
 
         if (response.StatusCode is HttpStatusCode.Forbidden)
             return Result.Forbidden();
-        
+
         if (response.StatusCode is HttpStatusCode.NotFound)
             return Result.NotFound("No recurring schedules found");
 
@@ -67,7 +67,7 @@ public class TwitchService(
                 "Twitch API error: Status code: {StatusCode}, Response: {Response}",
                 (int)response.StatusCode,
                 responseContent);
-            
+
             return Result.Error($"Twitch API error: HTTP {(int)response.StatusCode}");
         }
 
@@ -199,20 +199,18 @@ public class TwitchService(
 }
 
 file record TwitchGetSchedulesResponse(
-    // [property: JsonPropertyName("data")]
     TwitchScheduleData Data
 );
 
 file record TwitchScheduleData(
-    // [property: JsonPropertyName("segments")]
     List<TwitchScheduleSegment>? Segments,
 
     [property: JsonPropertyName("broadcaster_id")]
     string BroadcasterId,
-    
+
     [property: JsonPropertyName("broadcaster_name")]
     string BroadcasterName,
-    
+
     [property: JsonPropertyName("broadcaster_login")]
     string BroadcasterLogin,
 
@@ -222,84 +220,71 @@ file record TwitchScheduleData(
 );
 
 file record TwitchScheduleSegment(
-    // [property: JsonPropertyName("id")]
     string Id,
-    
+
     [property: JsonPropertyName("start_time")]
     DateTimeOffset StartTime,
-    
+
     [property: JsonPropertyName("end_time")]
     DateTimeOffset EndTime,
-    
-    // [property: JsonPropertyName("title")]
+
     string Title,
-    
+
     [property: JsonPropertyName("canceled_until")]
     string? CanceledUntil,
-    
-    // [property: JsonPropertyName("category")]
+
     TwitchScheduleCategory? Category,
-    
+
     [property: JsonPropertyName("is_recurring")]
     bool IsRecurring
 );
 
 file record TwitchScheduleCategory(
-    // [property: JsonPropertyName("id")]
     string Id,
-    
-    // [property: JsonPropertyName("name")]
     string Name
 );
 
 file record Vacation(
-    // [property: JsonPropertyName("start_time")]
+    [property: JsonPropertyName("start_time")]
     string StartTime,
-    
-    // [property: JsonPropertyName("end_time")]
+
+    [property: JsonPropertyName("end_time")]
     string EndTime
 );
 
 file record Pagination(
-    // [property: JsonPropertyName("cursor")]
     string? Cursor
 );
 
 file record TwitchCreateSegmentRequest(
     [property: JsonPropertyName("start_time")]
     DateTimeOffset StartTime,
-    
-    // [property: JsonPropertyName("timezone")]
+
     string Timezone,
-    
-    // [property: JsonPropertyName("duration")]
     string Duration,
-    
+
     [property: JsonPropertyName("is_recurring")]
     bool IsRecurring,
-    
+
     [property: JsonPropertyName("category_id")]
     string? CategoryId,
-    
-    // [property: JsonPropertyName("title")]
+
     string? Title
 );
 
 file record TwitchCreateSegmentResponse(
-    // [property: JsonPropertyName("data")]
     TwitchCreateSegmentData Data
 );
 
 file record TwitchCreateSegmentData(
-    // [property: JsonPropertyName("segments")]
     List<TwitchScheduleSegment>? Segments,
 
     [property: JsonPropertyName("broadcaster_id")]
     string BroadcasterId,
-    
+
     [property: JsonPropertyName("broadcaster_name")]
     string BroadcasterName,
-    
+
     [property: JsonPropertyName("broadcaster_login")]
     string BroadcasterLogin,
 
@@ -307,12 +292,10 @@ file record TwitchCreateSegmentData(
 );
 
 file record TwitchCreateClipResponse(
-    // [property: JsonPropertyName("data")]
     List<TwitchClipData> Data
 );
 
 file record TwitchClipData(
-    // [property: JsonPropertyName("id")]
     string Id,
 
     [property: JsonPropertyName("edit_url")]

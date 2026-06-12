@@ -35,7 +35,7 @@ public static class ServicesConfiguration
             });
 
             services.AddMemoryCache();
-            
+
             services.AddTransient<TwitchAuthHandler>();
 
             services.Configure<TwitchOptions>(builder.Configuration.GetSection(TwitchOptions.SectionName));
