@@ -1,4 +1,4 @@
-namespace EsportHub.Domain.Matches;
+namespace EsportHub.Domain.Tournaments;
 
 public enum KnockoutStageSide
 {

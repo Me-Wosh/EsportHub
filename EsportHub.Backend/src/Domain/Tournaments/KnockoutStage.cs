@@ -1,4 +1,3 @@
-using Ardalis.Result;
 using EsportHub.Domain.Matches;
 
 namespace EsportHub.Domain.Tournaments;
@@ -112,10 +111,10 @@ public class KnockoutStage : BaseEntity
             .Select(g => g.ToArray())
             .ToArray();
 
-        _random.Shuffle(groupings.AsSpan());
+        _random.Shuffle(groupings);
 
         foreach (var group in groupings)
-            _random.Shuffle(group.AsSpan());
+            _random.Shuffle(group);
 
         return
         [
