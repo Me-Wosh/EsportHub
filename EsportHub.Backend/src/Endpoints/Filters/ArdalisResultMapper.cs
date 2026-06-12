@@ -1,5 +1,3 @@
-using Ardalis.Result;
-
 namespace EsportHub.Endpoints.Filters;
 
 public class ArdalisResultMapper : IEndpointFilter

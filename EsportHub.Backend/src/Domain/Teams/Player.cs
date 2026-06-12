@@ -1,5 +1,3 @@
-using Ardalis.Result;
-
 namespace EsportHub.Domain.Teams;
 
 public class Player : BaseEntity

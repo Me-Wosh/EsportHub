@@ -33,6 +33,11 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${HTTPS_CERT_PASSWORD}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/esporthub.pfx
       - ConnectionStrings__EsportHubDb=${EsportHubDb_DockerConnectionString}
+      - MediatR__LicenseKey=${MediatR_LicenseKey}
+      - Twitch__ClientId=${Twitch_ClientId}
+      - Twitch__ClientSecret=${Twitch_ClientSecret}
+      - Twitch__BroadcasterId=${Twitch_BroadcasterId}
+      - Twitch__RedirectUri=${Twitch_RedirectUri}
     volumes:
       - ~/.aspnet/https:/https:ro
       - ./EsportHub.Backend:/app

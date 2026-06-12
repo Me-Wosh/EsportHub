@@ -1,4 +1,3 @@
-using Ardalis.Result;
 using EsportHub.Domain.Tournaments;
 
 namespace EsportHub.Domain.Teams;
