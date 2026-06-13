@@ -13,8 +13,7 @@ public class LiveStreamEndpoints : IEndpointGroup
 
         group.MapGet("/recurring-schedules", async Task<Result<ChannelScheduleDto>> (
             IMediator mediator,
-            CancellationToken cancellationToken
-        ) =>
+            CancellationToken cancellationToken) =>
         {
             return await mediator.Send(new GetChannelRecurringScheduleQuery(), cancellationToken);
         });
@@ -22,8 +21,7 @@ public class LiveStreamEndpoints : IEndpointGroup
         group.MapPost("/recurring-schedules", async Task<Result<ChannelScheduleSegmentDto>> (
             [FromBody] CreateChannelRecurringScheduleCommand command,
             IMediator mediator,
-            CancellationToken cancellationToken
-        ) =>
+            CancellationToken cancellationToken) =>
         {
             return await mediator.Send(command, cancellationToken);
         });
@@ -31,8 +29,7 @@ public class LiveStreamEndpoints : IEndpointGroup
         group.MapPost("/clips", async Task<Result<ClipDto>> (
             [FromBody] CreateClipCommand command,
             IMediator mediator,
-            CancellationToken cancellationToken
-        ) =>
+            CancellationToken cancellationToken) =>
         {
             return await mediator.Send(command, cancellationToken);
         });

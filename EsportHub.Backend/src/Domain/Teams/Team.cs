@@ -48,7 +48,13 @@ public class Team : BaseEntity
     public Result<Player> AddPlayer(string name)
     {
         if (_players.Count >= TeamConstraints.PlayersMaxCount)
-            return Result.Invalid(new ValidationError($"A team can have at most {TeamConstraints.PlayersMaxCount} players."));
+        {
+            return Result.Invalid(
+                new ValidationError($"A team can have at most {TeamConstraints.PlayersMaxCount} players."));
+        }
+
+        if (_players.Any(p => p.Name.Equals(name.Trim(), StringComparison.OrdinalIgnoreCase)))
+            return Result.Invalid(new ValidationError("A player with the same name already exists in this team."));
 
         var playerResult = Player.Create(name, Id);
         if (!playerResult.IsSuccess)
@@ -64,6 +70,9 @@ public class Team : BaseEntity
 
         if (player is null)
             return Result.NotFound("Player not found in this team.");
+
+        if (_players.Any(p => p.Id != playerId && p.Name.Equals(name.Trim(), StringComparison.OrdinalIgnoreCase)))
+            return Result.Invalid(new ValidationError("A player with the same name already exists in this team."));
 
         return player.UpdateName(name);
     }

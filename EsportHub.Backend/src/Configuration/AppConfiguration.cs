@@ -1,5 +1,3 @@
-using EsportHub.Endpoints;
-
 namespace EsportHub.Configuration;
 
 public static class AppConfiguration
@@ -16,7 +14,6 @@ public static class AppConfiguration
 
             app.UseHttpsRedirection();
             app.MapHealthChecks("/healthz");
-            app.MapTwitchAuth();
             app.MapEndpoints();
         }
     }
