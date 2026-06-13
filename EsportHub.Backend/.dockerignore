@@ -4,6 +4,9 @@
 **/Logs/
 **/appsettings.Development.json
 **/docs/
+**/README.md
+**/LICENSE
+**/.env.example
 tests/
 coveragereport/
 coverlet.runsettings
