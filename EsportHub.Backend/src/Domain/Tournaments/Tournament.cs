@@ -23,6 +23,12 @@ public class Tournament : BaseEntity
 
     public Result<Tournament> UpdateName(string name)
     {
+        if (Status != TournamentStatus.InPreparation)
+        {
+            return Result.Invalid(
+                new ValidationError($"Tournament name can only be updated in {TournamentStatus.InPreparation} status."));
+        }
+
         name = name.Trim();
 
         var errors = new List<ValidationError>();
@@ -46,7 +52,10 @@ public class Tournament : BaseEntity
     public Result Start(List<Team> teams, List<string> groupNames)
     {
         if (Status != TournamentStatus.InPreparation)
-            return Result.Invalid(new ValidationError("Tournament can only be started from InPreparation status."));
+        {
+            return Result.Invalid(
+                new ValidationError($"Tournament can only be started from {TournamentStatus.InPreparation} status."));
+        }
 
         if (teams.Count != TournamentConstraints.TeamsRequiredCount)
         {
