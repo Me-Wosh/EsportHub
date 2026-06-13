@@ -80,21 +80,6 @@ public class KnockoutStage : BaseEntity
         return Result.Success();
     }
 
-    internal Result Close()
-    {
-        if (IsClosed)
-            return Result.Invalid(new ValidationError("Knockout stage is already closed."));
-
-        if (_matches.Any(m => !m.IsResolved))
-        {
-            return Result.Invalid(
-                new ValidationError("Knockout stage can only be closed after all matches are resolved."));
-        }
-
-        IsClosed = true;
-        return Result.Success();
-    }
-
     private Result<KnockoutStage> UpdateTournamentId(Guid tournamentId)
     {
         if (tournamentId == Guid.Empty)
