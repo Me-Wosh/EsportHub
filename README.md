@@ -59,44 +59,11 @@ The database schema is managed via EF migrations. Migrations are automatically a
 
 ### Architecture diagram
 
-```
-/EsportHub.Backend
-├── .dockerignore
-├── coverlet.runsettings - settings for test coverage collector
-├── Dockerfile
-├── Dockerfile.dev
-├── EsportHub.Backend.slnx
-├── /src
-│   ├── appsettings.Development.json
-│   ├── appsettings.json
-│   ├── EsportHub.csproj
-│   ├── GlobalUsings.cs
-│   ├── Program.cs - app entry point
-│   ├── /Configuration - registering services, enabling WebApplicationBuilder features
-│   ├── /Domain - collection of aggregates and business rules
-│   │   ├── /Matches
-│   │   ├── /Teams
-│   │   ├── /Tournaments
-│   │   └── BaseEntity.cs - base entity, all aggregates derive from it
-│   ├── /Endpoints
-│   │   └── /Filters
-│   ├── /Features - handlers for app features
-│   │   ├── /LiveStreams
-│   │   ├── /Teams
-│   │   └── /Tournaments
-│   ├── /Infrastructure - external services
-│   │   ├── /MediatR
-│   │   └── /Twitch
-│   ├── /Middleware
-│   ├── /Persistence - database layer
-│   │   ├── /Configurations - entities configurations
-│   │   ├── /Migrations
-│   │   └── EsportHubDbContext.cs
-│   └── /Properties
-│       └── launchSettings.json
-└── /tests
-    ├── /EsportHub.IntegrationTests
-    └── /EsportHub.UnitTests
+```mermaid
+graph LR
+    User((Użytkownik)) --- API[Backend API]
+    API --- DB[(Baza Danych)]
+    API --- ExtAPI{Zewnętrzne API}
 ```
 
 ---
@@ -186,6 +153,8 @@ builder.HasOne(tournament => tournament.GroupStage)
 ```
 
 This means the database will refuse to delete a related entity that is referenced by parent entity. The restriction is enforced at the database level, not only in application code, so it holds regardless of how the data is accessed. For example: a started group stage within a tournament must not be silently removed. This is enforced because in many cases it would be total disaster if child entities got cascade deleted, for example: deleting group stage with groups and group stage matches after tournament started, meaning we completely lost track of tournament history and there can be a tournament with knockout stage but without a group stage. The only exception is deleting all players whenever a team gets deleted because a `Player` entity cannot live on its own in the database.
+
+---
 
 ### Mediator Pattern in endpoints
 

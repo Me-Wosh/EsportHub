@@ -1,3 +1,4 @@
+using EsportHub.Domain.Matches;
 using EsportHub.Domain.Teams;
 
 namespace EsportHub.Domain.Tournaments;
@@ -37,7 +38,7 @@ public class GroupStage : BaseEntity
         return Result.Success();
     }
 
-    internal Result ResolveMatch(Guid groupId, Guid matchId, int team1Score, int team2Score)
+    internal Result<GroupStageMatch> ResolveMatch(Guid groupId, Guid matchId, int team1Score, int team2Score)
     {
         if (IsClosed)
             return Result.Invalid(new ValidationError("Cannot resolve match after group stage is closed."));
