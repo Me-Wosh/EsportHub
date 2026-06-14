@@ -3,7 +3,7 @@ using EsportHub.Features.Tournaments;
 
 namespace EsportHub.UnitTests.Features.Tournaments;
 
-public class GetGroupQueryHandlerTests : GroupStageHandlerTestBase
+public class GetGroupQueryHandlerTests : HandlerTestBase
 {
     private readonly GetGroupQueryHandler _handler;
 
