@@ -32,11 +32,20 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
       
-      - name: Build without push
+      - name: Build development image without push
+        uses: docker/build-push-action@v7
+        with:
+          context: EsportHub.Backend
+          file: EsportHub.Backend/Dockerfile.dev
+          push: false # Only check if build succeeds and ignore build result
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build production image without push
         uses: docker/build-push-action@v7
         with:
           context: EsportHub.Backend
           file: EsportHub.Backend/Dockerfile
-          push: false # Only check if build succeeds and ignore build result
+          push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max

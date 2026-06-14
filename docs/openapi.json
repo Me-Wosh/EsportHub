@@ -478,6 +478,319 @@
         }
       }
     },
+    "/api/tournaments/{id}/group-stage": {
+      "post": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartGroupStageCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfGroupStageResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/{id}/group-stage/close": {
+      "post": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfGroupStageResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/{id}/group-stage/groups": {
+      "get": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfIEnumerableOfGroupResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/{id}/group-stage/groups/{groupId}": {
+      "get": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfGroupResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroupNameCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfGroupResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/{id}/group-stage/groups/{groupId}/matches": {
+      "get": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfIEnumerableOfGroupMatchResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/{id}/group-stage/seed": {
+      "post": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfGroupStageResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/{id}/group-stage/groups/{groupId}/matches/{matchId}": {
+      "put": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "matchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveGroupStageMatchCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfGroupMatchResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/twitch": {
       "get": {
         "tags": [
@@ -708,6 +1021,199 @@
           }
         }
       },
+      "GroupMatchResult": {
+        "required": [
+          "id",
+          "team1Id",
+          "team1Name",
+          "team1Score",
+          "team2Id",
+          "team2Name",
+          "team2Score",
+          "isResolved"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "team1Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "team1Name": {
+            "type": "string"
+          },
+          "team1Score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "team2Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "team2Name": {
+            "type": "string"
+          },
+          "team2Score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "isResolved": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GroupResult": {
+        "required": [
+          "id",
+          "name",
+          "standings"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "standings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupTeamStandingResult"
+            }
+          }
+        }
+      },
+      "GroupStageResult": {
+        "required": [
+          "id",
+          "isClosed",
+          "groups"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isClosed": {
+            "type": "boolean"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupSummaryResult"
+            }
+          }
+        }
+      },
+      "GroupSummaryResult": {
+        "required": [
+          "id",
+          "name",
+          "teams"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "teams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeamSummaryResult"
+            }
+          }
+        }
+      },
+      "GroupTeamStandingResult": {
+        "required": [
+          "position",
+          "teamId",
+          "teamName",
+          "gamesPlayed",
+          "wins",
+          "losses",
+          "pointsFor",
+          "pointsAgainst"
+        ],
+        "type": "object",
+        "properties": {
+          "position": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "teamId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "teamName": {
+            "type": "string"
+          },
+          "gamesPlayed": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "wins": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "losses": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "pointsFor": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "pointsAgainst": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
       "PlayerResult": {
         "required": [
           "id",
@@ -721,6 +1227,46 @@
           },
           "name": {
             "type": "string"
+          }
+        }
+      },
+      "ResolveGroupStageMatchCommand": {
+        "required": [
+          "tournamentId",
+          "groupId",
+          "matchId",
+          "team1Score",
+          "team2Score"
+        ],
+        "type": "object",
+        "properties": {
+          "tournamentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "matchId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "team1Score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "team2Score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           }
         }
       },
@@ -838,6 +1384,283 @@
         "properties": {
           "value": {
             "$ref": "#/components/schemas/ClipDto"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "correlationId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "validationErrors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ResultOfGroupMatchResult": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/GroupMatchResult"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "correlationId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "validationErrors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ResultOfGroupResult": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/GroupResult"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "correlationId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "validationErrors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ResultOfGroupStageResult": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/GroupStageResult"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "correlationId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "validationErrors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ResultOfIEnumerableOfGroupMatchResult": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/GroupMatchResult"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "correlationId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "validationErrors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ResultOfIEnumerableOfGroupResult": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/GroupResult"
+            }
           },
           "status": {
             "$ref": "#/components/schemas/ResultStatus"
@@ -1284,6 +2107,25 @@
           }
         }
       },
+      "StartGroupStageCommand": {
+        "required": [
+          "tournamentId",
+          "groupNames"
+        ],
+        "type": "object",
+        "properties": {
+          "tournamentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "groupNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "TeamResult": {
         "required": [
           "id",
@@ -1313,6 +2155,22 @@
             "items": {
               "$ref": "#/components/schemas/PlayerResult"
             }
+          }
+        }
+      },
+      "TeamSummaryResult": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
           }
         }
       },
@@ -1356,6 +2214,27 @@
       },
       "Unit": {
         "type": "object"
+      },
+      "UpdateGroupNameCommand": {
+        "required": [
+          "tournamentId",
+          "groupId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "tournamentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
       },
       "UpdatePlayerNameCommand": {
         "required": [

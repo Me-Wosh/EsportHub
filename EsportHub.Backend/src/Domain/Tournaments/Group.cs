@@ -48,7 +48,7 @@ public class Group : BaseEntity
         return this;
     }
 
-    public Result AddTeam(Team team)
+    internal Result AddTeam(Team team)
     {
         if (_teams.Count >= GroupConstraints.TeamsRequiredCount)
         {
@@ -63,7 +63,7 @@ public class Group : BaseEntity
         return Result.Success();
     }
 
-    public Result InitializeMatches()
+    internal Result InitializeMatches()
     {
         if (_matches.Count > 0)
             return Result.Invalid(new ValidationError("Matches have already been initialized for this group."));
@@ -99,12 +99,10 @@ public class Group : BaseEntity
             }
         }
 
-        RecalculateStandings();
-
-        return Result.Success();
+        return RecalculateStandings();
     }
 
-    public Result ResolveMatch(Guid matchId, int team1Score, int team2Score)
+    internal Result<GroupStageMatch> ResolveMatch(Guid matchId, int team1Score, int team2Score)
     {
         var match = _matches.SingleOrDefault(m => m.Id == matchId);
         if (match is null)
@@ -112,13 +110,16 @@ public class Group : BaseEntity
 
         var setScoresResult = match.SetScores(team1Score, team2Score);
         if (!setScoresResult.IsSuccess)
-            return setScoresResult;
+            return setScoresResult.Map();
 
-        RecalculateStandings();
-        return Result.Success();
+        var recalculateStandingsResult = RecalculateStandings();
+        if (!recalculateStandingsResult.IsSuccess)
+            return recalculateStandingsResult.Map();
+
+        return Result.Success(match);
     }
 
-    public List<GroupTeamStanding> GetQualifiedTeams()
+    internal List<GroupTeamStanding> GetQualifiedTeams()
     {
         return _standings
             .OrderBy(s => s.Position)
