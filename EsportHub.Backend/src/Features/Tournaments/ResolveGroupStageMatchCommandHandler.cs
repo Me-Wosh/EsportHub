@@ -56,7 +56,7 @@ public class ResolveGroupStageMatchCommandHandler(
         await dbContext.SaveChangesAsync(cancellationToken);
 
         var match = resolveMatchResult.Value;
-        
+
         return new GroupMatchResult(
             match.Id,
             match.Team1Id,
