@@ -206,16 +206,6 @@ public class EfConfigurationTests : IDisposable
     }
 
     [Fact]
-    public void GroupTeamStanding_HasUniqueIndexOnGroupIdAndPosition()
-    {
-        var entityType = _context.Model.FindEntityType(typeof(GroupTeamStanding))!;
-        var index = entityType.GetIndexes().Single(i =>
-            i.Properties.Any(p => p.Name == nameof(GroupTeamStanding.GroupId)) &&
-            i.Properties.Any(p => p.Name == nameof(GroupTeamStanding.Position)));
-        Assert.True(index.IsUnique);
-    }
-
-    [Fact]
     public void GroupTeamStanding_TeamForeignKey_HasDeleteBehaviorRestrict()
     {
         var fk = GetUniqueForeignKey<GroupTeamStanding, Team>();

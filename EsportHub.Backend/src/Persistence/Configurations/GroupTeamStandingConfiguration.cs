@@ -11,8 +11,9 @@ public class GroupTeamStandingConfiguration : IEntityTypeConfiguration<GroupTeam
         builder.HasIndex(standing => new { standing.GroupId, standing.TeamId })
             .IsUnique();
 
-        builder.HasIndex(standing => new { standing.GroupId, standing.Position })
-            .IsUnique();
+        // can't have a unique index on GroupId and Position as it will create a circular dependency when trying to move
+        // a team up or down in the standings, as for exmaple changing position 1 to position 2 requires position 2 to
+        // be free already
 
         builder.HasOne(standing => standing.Team)
             .WithOne()

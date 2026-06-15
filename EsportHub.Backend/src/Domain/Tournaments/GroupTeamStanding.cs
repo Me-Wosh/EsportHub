@@ -21,12 +21,12 @@ public class GroupTeamStanding : BaseEntity
 
     public int PointDifference => PointsFor - PointsAgainst;
 
-    internal static Result<GroupTeamStanding> Create(Guid groupId, Guid teamId)
+    internal static Result<GroupTeamStanding> Create(Group group, Guid teamId)
     {
         var groupTeamStanding = new GroupTeamStanding();
 
         return Result.Success()
-            .Bind(_ => groupTeamStanding.UpdateGroupId(groupId))
+            .Bind(_ => groupTeamStanding.UpdateGroup(group))
             .Bind(_ => groupTeamStanding.UpdateTeamId(teamId));
     }
 
@@ -84,12 +84,12 @@ public class GroupTeamStanding : BaseEntity
         return Result.Success();
     }
 
-    private Result<GroupTeamStanding> UpdateGroupId(Guid groupId)
+    private Result<GroupTeamStanding> UpdateGroup(Group group)
     {
-        if (groupId == Guid.Empty)
+        if (group is null)
             return Result.Invalid(new ValidationError("Standing must belong to a group."));
 
-        GroupId = groupId;
+        Group = group;
         return this;
     }
 

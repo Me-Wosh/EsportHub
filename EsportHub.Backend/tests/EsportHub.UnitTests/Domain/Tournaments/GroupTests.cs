@@ -3,12 +3,12 @@ using EsportHub.Domain.Tournaments;
 
 namespace EsportHub.UnitTests.Domain.Tournaments;
 
-public class GroupTests
+public class GroupTests : HandlerTestBase
 {
     [Fact]
     public void UpdateName_GivenValidName_UpdatesName()
     {
-        var group = Group.Create("Group A", Guid.NewGuid()).Value;
+        var group = Group.Create("Group A", CreateDummyGroupStage()).Value;
 
         var result = group.UpdateName("Group B");
 
@@ -19,7 +19,7 @@ public class GroupTests
     [Fact]
     public void UpdateName_GivenEmptyName_ReturnsInvalidAndDoesNotChangeName()
     {
-        var group = Group.Create("Group A", Guid.NewGuid()).Value;
+        var group = Group.Create("Group A", CreateDummyGroupStage()).Value;
 
         var result = group.UpdateName("");
 
@@ -30,7 +30,7 @@ public class GroupTests
     [Fact]
     public void UpdateName_GivenNameWithLeadingAndTrailingWhitespace_TrimsAndUpdatesName()
     {
-        var group = Group.Create("Group A", Guid.NewGuid()).Value;
+        var group = Group.Create("Group A", CreateDummyGroupStage()).Value;
 
         var result = group.UpdateName("  Group B  ");
 
@@ -41,7 +41,7 @@ public class GroupTests
     [Fact]
     public void UpdateName_GivenNameExceedingMaxLength_ReturnsInvalid()
     {
-        var group = Group.Create("Group A", Guid.NewGuid()).Value;
+        var group = Group.Create("Group A", CreateDummyGroupStage()).Value;
         var longName = new string('A', GroupConstraints.NameMaxLength + 1);
 
         var result = group.UpdateName(longName);
@@ -53,7 +53,7 @@ public class GroupTests
     [Fact]
     public void AddTeam_GivenValidTeam_AddsTeamToGroup()
     {
-        var group = Group.Create("Group A", Guid.NewGuid()).Value;
+        var group = Group.Create("Group A", CreateDummyGroupStage()).Value;
         var team = Team.Create("Team Alpha", Guid.NewGuid()).Value;
 
         var result = group.AddTeam(team);
@@ -65,7 +65,7 @@ public class GroupTests
     [Fact]
     public void AddTeam_GivenDuplicateTeam_ReturnsInvalidAndDoesNotAddDuplicate()
     {
-        var group = Group.Create("Group A", Guid.NewGuid()).Value;
+        var group = Group.Create("Group A", CreateDummyGroupStage()).Value;
         var team = Team.Create("Team Alpha", Guid.NewGuid()).Value;
         group.AddTeam(team);
 
@@ -127,6 +127,7 @@ public class GroupTests
         var group = CreateGroupWithTeams(GroupConstraints.TeamsRequiredCount);
         group.InitializeMatches();
         var match = group.Matches.First();
+        SetEntityId(match, Guid.NewGuid());
 
         var result = group.ResolveMatch(match.Id, 2, 1);
 
@@ -153,6 +154,7 @@ public class GroupTests
         var group = CreateGroupWithTeams(GroupConstraints.TeamsRequiredCount);
         group.InitializeMatches();
         var match = group.Matches.First();
+        SetEntityId(match, Guid.NewGuid());
 
         var result = group.ResolveMatch(match.Id, 1, 1);
 
@@ -166,7 +168,10 @@ public class GroupTests
         var group = CreateGroupWithTeams(GroupConstraints.TeamsRequiredCount);
         group.InitializeMatches();
         foreach (var match in group.Matches)
+        {
+            SetEntityId(match, Guid.NewGuid());
             group.ResolveMatch(match.Id, 2, 1);
+        }
 
         var qualifiedTeams = group.GetQualifiedTeams();
 
@@ -176,17 +181,22 @@ public class GroupTests
     [Fact]
     public void RecalculateStandings_GivenTeamWinsAllMatches_PlacesTeamFirst()
     {
-        var group = Group.Create("Group A", Guid.NewGuid()).Value;
+        var group = Group.Create("Group A", CreateDummyGroupStage()).Value;
         var teams = Enumerable.Range(1, GroupConstraints.TeamsRequiredCount)
             .Select(i => Team.Create($"Team {i}", Guid.NewGuid()).Value)
             .ToList();
 
         foreach (var team in teams)
+        {
+            SetEntityId(team, Guid.NewGuid());
             group.AddTeam(team);
+        }
         group.InitializeMatches();
 
         foreach (var match in group.Matches.ToList())
         {
+            SetEntityId(match, Guid.NewGuid());
+
             if (match.Team1Id == teams[0].Id)
                 group.ResolveMatch(match.Id, 2, 1);
             else if (match.Team2Id == teams[0].Id)
@@ -209,17 +219,28 @@ public class GroupTests
         group.InitializeMatches();
 
         foreach (var match in group.Matches)
+        {
+            SetEntityId(match, Guid.NewGuid());
             group.ResolveMatch(match.Id, 2, 1);
+        }
 
         var expectedGamesPerTeam = GroupConstraints.TeamsRequiredCount - 1;
         Assert.All(group.Standings, s => Assert.Equal(expectedGamesPerTeam, s.GamesPlayed));
     }
 
+    private static GroupStage CreateDummyGroupStage() =>
+        (GroupStage)Activator.CreateInstance(typeof(GroupStage), nonPublic: true)!;
+
     private static Group CreateGroupWithTeams(int teamCount)
     {
-        var group = Group.Create("Group A", Guid.NewGuid()).Value;
+        var group = Group.Create("Group A", CreateDummyGroupStage()).Value;
+        SetEntityId(group, Guid.NewGuid());
         for (var i = 0; i < teamCount; i++)
-            group.AddTeam(Team.Create($"Team {i + 1}", Guid.NewGuid()).Value);
+        {
+            var team = Team.Create($"Team {i + 1}", Guid.NewGuid()).Value;
+            SetEntityId(team, Guid.NewGuid());
+            group.AddTeam(team);
+        }
         return group;
     }
 }

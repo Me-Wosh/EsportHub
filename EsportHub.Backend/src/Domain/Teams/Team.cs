@@ -56,7 +56,7 @@ public class Team : BaseEntity
         if (_players.Any(p => p.Name.Equals(name.Trim(), StringComparison.OrdinalIgnoreCase)))
             return Result.Invalid(new ValidationError("A player with the same name already exists in this team."));
 
-        var playerResult = Player.Create(name, Id);
+        var playerResult = Player.Create(name, this);
         if (!playerResult.IsSuccess)
             return playerResult;
 

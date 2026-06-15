@@ -13,7 +13,7 @@ public class KnockoutStageMatch : Match
     public KnockoutStage KnockoutStage { get; private set; } = null!;
 
     public static Result<KnockoutStageMatch> Create(
-        Guid knockoutStageId,
+        KnockoutStage knockoutStage,
         KnockoutStageRound round,
         KnockoutStageSide? side,
         Guid team1Id,
@@ -22,18 +22,18 @@ public class KnockoutStageMatch : Match
         var knockoutStageMatch = new KnockoutStageMatch();
 
         return Result.Success()
-            .Bind(_ => knockoutStageMatch.UpdateKnockoutStage(knockoutStageId))
+            .Bind(_ => knockoutStageMatch.UpdateKnockoutStage(knockoutStage))
             .Bind(_ => knockoutStageMatch.UpdateRound(round))
             .Bind(_ => knockoutStageMatch.UpdateSide(side, round))
             .Bind(_ => knockoutStageMatch.UpdateTeams(team1Id, team2Id));
     }
 
-    private Result<KnockoutStageMatch> UpdateKnockoutStage(Guid knockoutStageId)
+    private Result<KnockoutStageMatch> UpdateKnockoutStage(KnockoutStage knockoutStage)
     {
-        if (knockoutStageId == Guid.Empty)
+        if (knockoutStage is null)
             return Result.Invalid(new ValidationError("Knockout stage match must belong to a knockout stage."));
 
-        KnockoutStageId = knockoutStageId;
+        KnockoutStage = knockoutStage;
         return this;
     }
 

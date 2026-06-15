@@ -106,7 +106,7 @@ public class GroupStage : BaseEntity
 
         foreach (var (index, name) in groupNames.Index())
         {
-            var createGroupResult = Group.Create(name, Id);
+            var createGroupResult = Group.Create(name, this);
             if (!createGroupResult.IsSuccess)
                 return createGroupResult.Map();
 

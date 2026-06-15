@@ -29,7 +29,10 @@ public class RemovePlayerCommandHandler(
         if (player is null)
             return Result.NotFound("Player not found in this team.");
 
-        team.RemovePlayer(command.PlayerId);
+        var removePlayerResult = team.RemovePlayer(command.PlayerId);
+        if (!removePlayerResult.IsSuccess)
+            return removePlayerResult.Map();
+
         await dbContext.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }

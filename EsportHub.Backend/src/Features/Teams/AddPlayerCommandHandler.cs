@@ -28,8 +28,6 @@ public class AddPlayerCommandHandler(EsportHubDbContext dbContext) : ICommandHan
             return addPlayerResult.Map();
 
         var player = addPlayerResult.Value;
-        dbContext.Players.Add(player);
-
         await dbContext.SaveChangesAsync(cancellationToken);
         return Result.Created(new PlayerResult(player.Id, player.Name));
     }
