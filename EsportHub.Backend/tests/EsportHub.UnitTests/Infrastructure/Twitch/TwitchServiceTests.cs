@@ -3,6 +3,7 @@ using EsportHub.Infrastructure.Twitch;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
 namespace EsportHub.UnitTests.Infrastructure.Twitch;
 
@@ -170,11 +171,56 @@ public class TwitchServiceTests
         Assert.True(ReceivedErrorLog(logger));
     }
 
+    [Fact]
+    public async Task GetRecurringSchedulesAsync_GivenHttpClientTimeout_ReturnsAndLogsError()
+    {
+        var service = CreateServiceThatThrows(new TaskCanceledException("The request timed out"), out var logger);
+
+        var result = await service.GetRecurringSchedulesAsync(CancellationToken.None);
+
+        Assert.True(result.IsError());
+        Assert.True(ReceivedErrorLog(logger));
+    }
+
+    [Fact]
+    public async Task CreateRecurringScheduleAsync_GivenHttpClientTimeout_ReturnsAndLogsError()
+    {
+        var service = CreateServiceThatThrows(new TaskCanceledException("The request timed out"), out var logger);
+
+        var result = await service.CreateRecurringScheduleAsync(
+            DateTimeOffset.UtcNow, "UTC", 60, null, null, CancellationToken.None);
+
+        Assert.True(result.IsError());
+        Assert.True(ReceivedErrorLog(logger));
+    }
+
+    [Fact]
+    public async Task CreateClipAsync_GivenHttpClientTimeout_ReturnsAndLogsError()
+    {
+        var service = CreateServiceThatThrows(new TaskCanceledException("The request timed out"), out var logger);
+
+        var result = await service.CreateClipAsync(null, null, CancellationToken.None);
+
+        Assert.True(result.IsError());
+        Assert.True(ReceivedErrorLog(logger));
+    }
+
     private static TwitchService CreateService(HttpResponseMessage response, out ILogger<TwitchService> logger)
     {
         var handler = Substitute.For<MockHttpMessageHandler>();
         handler.PublicSendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(response));
+
+        var httpClient = new HttpClient(handler) { BaseAddress = new Uri("https://api.twitch.tv/helix/") };
+        logger = Substitute.For<ILogger<TwitchService>>();
+        return new TwitchService(httpClient, Options.Create(DefaultOptions), logger);
+    }
+
+    private static TwitchService CreateServiceThatThrows(Exception exception, out ILogger<TwitchService> logger)
+    {
+        var handler = Substitute.For<MockHttpMessageHandler>();
+        handler.PublicSendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
+            .Throws(exception);
 
         var httpClient = new HttpClient(handler) { BaseAddress = new Uri("https://api.twitch.tv/helix/") };
         logger = Substitute.For<ILogger<TwitchService>>();
