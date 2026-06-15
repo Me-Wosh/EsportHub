@@ -791,6 +791,115 @@
         }
       }
     },
+    "/api/tournaments/{id}/knockout-stage": {
+      "get": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfKnockoutStageResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/{id}/knockout-stage/matches/{matchId}": {
+      "put": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "matchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveKnockoutStageMatchCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfKnockoutMatchResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/{id}/knockout-stage/seed": {
+      "post": {
+        "tags": [
+          "EsportHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOfKnockoutStageResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/twitch": {
       "get": {
         "tags": [
@@ -1214,6 +1323,104 @@
           }
         }
       },
+      "KnockoutMatchResult": {
+        "required": [
+          "id",
+          "round",
+          "side",
+          "team1Id",
+          "team1Name",
+          "team1Score",
+          "team2Id",
+          "team2Name",
+          "team2Score",
+          "isResolved"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "round": {
+            "$ref": "#/components/schemas/KnockoutStageRound"
+          },
+          "side": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/KnockoutStageSide"
+              }
+            ]
+          },
+          "team1Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "team1Name": {
+            "type": "string"
+          },
+          "team1Score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "team2Id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "team2Name": {
+            "type": "string"
+          },
+          "team2Score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "isResolved": {
+            "type": "boolean"
+          }
+        }
+      },
+      "KnockoutStageResult": {
+        "required": [
+          "id",
+          "isClosed",
+          "matches"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isClosed": {
+            "type": "boolean"
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KnockoutMatchResult"
+            }
+          }
+        }
+      },
+      "KnockoutStageRound": {
+        "type": "integer"
+      },
+      "KnockoutStageSide": {
+        "type": "integer"
+      },
       "PlayerResult": {
         "required": [
           "id",
@@ -1245,6 +1452,41 @@
             "format": "uuid"
           },
           "groupId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "matchId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "team1Score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "team2Score": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "ResolveKnockoutStageMatchCommand": {
+        "required": [
+          "tournamentId",
+          "matchId",
+          "team1Score",
+          "team2Score"
+        ],
+        "type": "object",
+        "properties": {
+          "tournamentId": {
             "type": "string",
             "format": "uuid"
           },
@@ -1779,6 +2021,112 @@
             "items": {
               "$ref": "#/components/schemas/TournamentResult"
             }
+          },
+          "status": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "correlationId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "validationErrors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ResultOfKnockoutMatchResult": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/KnockoutMatchResult"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "correlationId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "location": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "validationErrors": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ResultOfKnockoutStageResult": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/KnockoutStageResult"
           },
           "status": {
             "$ref": "#/components/schemas/ResultStatus"

@@ -9,21 +9,21 @@ public class GroupStageMatch : Match
     public Guid GroupId { get; private set; }
     public Group Group { get; private set; } = null!;
 
-    internal static Result<GroupStageMatch> Create(Guid groupId, Guid team1Id, Guid team2Id)
+    internal static Result<GroupStageMatch> Create(Group group, Guid team1Id, Guid team2Id)
     {
         var groupStageMatch = new GroupStageMatch();
 
         return Result.Success()
-            .Bind(_ => groupStageMatch.UpdateGroup(groupId))
+            .Bind(_ => groupStageMatch.UpdateGroup(group))
             .Bind(_ => groupStageMatch.UpdateTeams(team1Id, team2Id));
     }
 
-    private Result<GroupStageMatch> UpdateGroup(Guid groupId)
+    private Result<GroupStageMatch> UpdateGroup(Group group)
     {
-        if (groupId == Guid.Empty)
+        if (group is null)
             return Result.Invalid(new ValidationError("Group stage match must belong to a group."));
 
-        GroupId = groupId;
+        Group = group;
         return this;
     }
 

@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_vol:/var/lib/postgresql
     healthcheck:
-      test: pg_isready -d ${POSTGRES_DB}
+      test: pg_isready -u postgres -d ${POSTGRES_DB}
       interval: 30s
       timeout: 5s
       retries: 5

@@ -1,9 +1,8 @@
-﻿using Ardalis.Result;
-using EsportHub.Endpoints.Filters;
+﻿using EsportHub.Endpoints.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace EsportHub.UnitTests;
+namespace EsportHub.UnitTests.Endpoints.Filters;
 
 public class ArdalisResultMapperTests
 {

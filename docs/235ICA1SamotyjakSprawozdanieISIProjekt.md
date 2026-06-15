@@ -208,7 +208,7 @@ sequenceDiagram
 
 - **Rodzaje testów:** jednostkowe, integracyjne,
 - **Narzędzie do pokrycia:** coverlet.collector,
-- **Wynik pokrycia:** 65%
+- **Wynik pokrycia:** 78%
 
 ![Pokrycie testów](./code-coverage.png)
 

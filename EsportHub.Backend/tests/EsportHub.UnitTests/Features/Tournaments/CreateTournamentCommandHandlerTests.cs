@@ -1,6 +1,5 @@
 using EsportHub.Domain.Tournaments;
 using EsportHub.Features.Tournaments;
-using EsportHub.UnitTests.Features;
 
 namespace EsportHub.UnitTests.Features.Tournaments;
 

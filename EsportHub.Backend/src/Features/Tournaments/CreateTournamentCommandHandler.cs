@@ -2,6 +2,7 @@ using EsportHub.Domain.Tournaments;
 using EsportHub.Features.Tournaments.DTOs;
 using EsportHub.Infrastructure.MediatR;
 using EsportHub.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace EsportHub.Features.Tournaments;
 
@@ -15,6 +16,10 @@ public class CreateTournamentCommandHandler(
         CreateTournamentCommand command,
         CancellationToken cancellationToken)
     {
+        var tournamentExists = await dbContext.Tournaments.AnyAsync(t => t.Name == command.Name, cancellationToken);
+        if (tournamentExists)
+            return Result.Invalid(new ValidationError("A tournament with the same name already exists."));
+
         var createTournamentResult = Tournament.Create(command.Name);
         if (!createTournamentResult.IsSuccess)
             return createTournamentResult.Map();

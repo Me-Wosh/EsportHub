@@ -45,7 +45,7 @@ public class KnockoutStage : BaseEntity
                 : KnockoutStageSide.Right;
 
             var knockoutStageMatch = KnockoutStageMatch.Create(
-                Id,
+                this,
                 KnockoutStageRound.QuarterFinals,
                 side,
                 pair.Team1.TeamId,
@@ -60,14 +60,10 @@ public class KnockoutStage : BaseEntity
         return Result.Success();
     }
 
-    internal Result ResolveMatch(Guid matchId, int team1Score, int team2Score)
+    internal Result<KnockoutStageMatch> ResolveMatch(KnockoutStageMatch match, int team1Score, int team2Score)
     {
         if (IsClosed)
             return Result.Invalid(new ValidationError("Cannot resolve match after knockout stage is closed."));
-
-        var match = _matches.SingleOrDefault(m => m.Id == matchId);
-        if (match is null)
-            return Result.NotFound("Match was not found in this knockout stage.");
 
         var setScoresResult = match.SetScores(team1Score, team2Score);
         if (!setScoresResult.IsSuccess)
@@ -77,7 +73,7 @@ public class KnockoutStage : BaseEntity
         if (!updateBracketResult.IsSuccess)
             return updateBracketResult;
 
-        return Result.Success();
+        return Result.Success(match);
     }
 
     private Result<KnockoutStage> UpdateTournamentId(Guid tournamentId)
@@ -92,7 +88,7 @@ public class KnockoutStage : BaseEntity
     private List<KnockoutPair> BuildQuarterFinalPairings(List<GroupTeamStanding> participants)
     {
         var groupings = participants
-            .GroupBy(p => p.GroupId)
+            .GroupBy(p => p.Group.Id)
             .Select(g => g.ToArray())
             .ToArray();
 
@@ -148,7 +144,7 @@ public class KnockoutStage : BaseEntity
             .ToList();
 
         var createLeftSemiFinalResult = KnockoutStageMatch.Create(
-            Id,
+            this,
             KnockoutStageRound.SemiFinals,
             KnockoutStageSide.Left,
             leftWinners[0],
@@ -158,7 +154,7 @@ public class KnockoutStage : BaseEntity
             return createLeftSemiFinalResult.Map();
 
         var createRightSemiFinalResult = KnockoutStageMatch.Create(
-            Id,
+            this,
             KnockoutStageRound.SemiFinals,
             KnockoutStageSide.Right,
             rightWinners[0],
@@ -187,7 +183,7 @@ public class KnockoutStage : BaseEntity
             .ToList();
 
         var createFinalResult = KnockoutStageMatch.Create(
-            Id,
+            this,
             KnockoutStageRound.Final,
             null,
             winners[0],

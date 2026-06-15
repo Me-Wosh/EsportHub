@@ -3,7 +3,7 @@ using EsportHub.Domain.Tournaments;
 
 namespace EsportHub.UnitTests.Domain.Tournaments;
 
-public class TournamentTests
+public class TournamentTests : HandlerTestBase
 {
     [Fact]
     public void Create_GivenValidName_ReturnsSuccessWithStatusInPreparation()
@@ -77,7 +77,7 @@ public class TournamentTests
     [Fact]
     public void Start_GivenValidTeamsAndGroupNames_StartsGroupStageAndSetsStartDate()
     {
-        var tournament = Tournament.Create("ESL Pro League").Value;
+        var tournament = CreateTournamentWithId();
         var teams = CreateTeamsWithMinRoster(TournamentConstraints.TeamsRequiredCount, tournament.Id);
 
         var result = tournament.Start(teams, GetDefaultGroupNames());
@@ -103,7 +103,7 @@ public class TournamentTests
     [Fact]
     public void Start_GivenWrongNumberOfTeams_ReturnsInvalidAndKeepsStatusInPreparation()
     {
-        var tournament = Tournament.Create("ESL Pro League").Value;
+        var tournament = CreateTournamentWithId();
         var teams = CreateTeamsWithMinRoster(TournamentConstraints.TeamsRequiredCount - 1, tournament.Id);
 
         var result = tournament.Start(teams, GetDefaultGroupNames());
@@ -115,7 +115,7 @@ public class TournamentTests
     [Fact]
     public void Start_GivenTeamWithInsufficientRoster_ReturnsInvalidAndKeepsStatusInPreparation()
     {
-        var tournament = Tournament.Create("ESL Pro League").Value;
+        var tournament = CreateTournamentWithId();
         var teams = CreateTeamsWithMinRoster(TournamentConstraints.TeamsRequiredCount, tournament.Id);
         var understrengthTeam = Team.Create("Understrengh Team", tournament.Id).Value;
         for (var i = 0; i < TeamConstraints.PlayersMinCount - 1; i++)
@@ -131,7 +131,7 @@ public class TournamentTests
     [Fact]
     public void Start_GivenWrongNumberOfGroupNames_ReturnsInvalidAndKeepsStatusInPreparation()
     {
-        var tournament = Tournament.Create("ESL Pro League").Value;
+        var tournament = CreateTournamentWithId();
         var teams = CreateTeamsWithMinRoster(TournamentConstraints.TeamsRequiredCount, tournament.Id);
         var tooFewGroupNames = new List<string> { "Group A", "Group B", "Group C" };
 
@@ -186,28 +186,35 @@ public class TournamentTests
         var ks = tournament.KnockoutStage!;
 
         foreach (var match in ks.Matches.ToList())
-            ks.ResolveMatch(match.Id, 2, 1);
+            ks.ResolveMatch(match, 2, 1);
 
         Assert.Equal(
             TournamentConstraints.QuarterFinalMatchesCount + TournamentConstraints.SemiFinalMatchesCount,
             ks.Matches.Count);
 
         foreach (var match in ks.Matches.Where(m => m.Round == KnockoutStageRound.SemiFinals).ToList())
-            ks.ResolveMatch(match.Id, 2, 1);
+            ks.ResolveMatch(match, 2, 1);
 
         Assert.Equal(
             TournamentConstraints.QuarterFinalMatchesCount + TournamentConstraints.SemiFinalMatchesCount + 1,
             ks.Matches.Count);
 
         var finalMatch = ks.Matches.Single(m => m.Round == KnockoutStageRound.Final);
-        ks.ResolveMatch(finalMatch.Id, 2, 1);
+        ks.ResolveMatch(finalMatch, 2, 1);
 
         Assert.True(ks.IsClosed);
     }
 
+    private static Tournament CreateTournamentWithId(string name = "ESL Pro League")
+    {
+        var tournament = Tournament.Create(name).Value;
+        SetEntityId(tournament, Guid.NewGuid());
+        return tournament;
+    }
+
     private static Tournament CreateStartedTournament()
     {
-        var tournament = Tournament.Create("ESL Pro League").Value;
+        var tournament = CreateTournamentWithId();
         var teams = CreateTeamsWithMinRoster(TournamentConstraints.TeamsRequiredCount, tournament.Id);
         tournament.Start(teams, GetDefaultGroupNames());
         return tournament;
@@ -219,6 +226,7 @@ public class TournamentTests
         for (var i = 0; i < count; i++)
         {
             var team = Team.Create($"Team {i + 1}", tournamentId).Value;
+            SetEntityId(team, Guid.NewGuid());
             for (var j = 0; j < TeamConstraints.PlayersMinCount; j++)
                 team.AddPlayer($"Player {j + 1}");
             teams.Add(team);
@@ -233,8 +241,12 @@ public class TournamentTests
     {
         foreach (var group in tournament.GroupStage!.Groups)
         {
+            SetEntityId(group, Guid.NewGuid());
             foreach (var match in group.Matches)
+            {
+                SetEntityId(match, Guid.NewGuid());
                 group.ResolveMatch(match.Id, 2, 1);
+            }
         }
     }
 }

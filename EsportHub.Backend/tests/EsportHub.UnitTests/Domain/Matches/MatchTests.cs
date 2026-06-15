@@ -11,7 +11,7 @@ public class MatchTests
         var (team1Id, team2Id) = (Guid.NewGuid(), Guid.NewGuid());
 
         var result = KnockoutStageMatch.Create(
-            Guid.NewGuid(), KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, team1Id, team2Id);
+            CreateDummyKnockoutStage(), KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, team1Id, team2Id);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(KnockoutStageRound.QuarterFinals, result.Value.Round);
@@ -24,7 +24,7 @@ public class MatchTests
         var (team1Id, team2Id) = (Guid.NewGuid(), Guid.NewGuid());
 
         var result = KnockoutStageMatch.Create(
-            Guid.NewGuid(), KnockoutStageRound.Final, null, team1Id, team2Id);
+            CreateDummyKnockoutStage(), KnockoutStageRound.Final, null, team1Id, team2Id);
 
         Assert.True(result.IsSuccess);
         Assert.Null(result.Value.Side);
@@ -36,7 +36,7 @@ public class MatchTests
         var (team1Id, team2Id) = (Guid.NewGuid(), Guid.NewGuid());
 
         var result = KnockoutStageMatch.Create(
-            Guid.NewGuid(), KnockoutStageRound.Final, KnockoutStageSide.Left, team1Id, team2Id);
+            CreateDummyKnockoutStage(), KnockoutStageRound.Final, KnockoutStageSide.Left, team1Id, team2Id);
 
         Assert.True(result.IsInvalid());
     }
@@ -47,7 +47,7 @@ public class MatchTests
         var (team1Id, team2Id) = (Guid.NewGuid(), Guid.NewGuid());
 
         var result = KnockoutStageMatch.Create(
-            Guid.NewGuid(), KnockoutStageRound.SemiFinals, null, team1Id, team2Id);
+            CreateDummyKnockoutStage(), KnockoutStageRound.SemiFinals, null, team1Id, team2Id);
 
         Assert.True(result.IsInvalid());
     }
@@ -58,7 +58,7 @@ public class MatchTests
         var teamId = Guid.NewGuid();
 
         var result = KnockoutStageMatch.Create(
-            Guid.NewGuid(), KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, teamId, teamId);
+            CreateDummyKnockoutStage(), KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, teamId, teamId);
 
         Assert.True(result.IsInvalid());
     }
@@ -70,18 +70,18 @@ public class MatchTests
     public void Create_GivenEmptyTeamId_ReturnsInvalid(Guid team1Id, Guid team2Id)
     {
         var result = KnockoutStageMatch.Create(
-            Guid.NewGuid(), KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, team1Id, team2Id);
+            CreateDummyKnockoutStage(), KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, team1Id, team2Id);
 
         Assert.True(result.IsInvalid());
     }
 
     [Fact]
-    public void Create_GivenEmptyKnockoutStageId_ReturnsInvalid()
+    public void Create_GivenNullKnockoutStage_ReturnsInvalid()
     {
         var (team1Id, team2Id) = (Guid.NewGuid(), Guid.NewGuid());
 
         var result = KnockoutStageMatch.Create(
-            Guid.Empty, KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, team1Id, team2Id);
+            null!, KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, team1Id, team2Id);
 
         Assert.True(result.IsInvalid());
     }
@@ -144,10 +144,10 @@ public class MatchTests
         var team2Id = Guid.NewGuid();
 
         var matchWithTeam1AsWinner = KnockoutStageMatch.Create(
-            Guid.NewGuid(), KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, team1Id, team2Id).Value;
+            CreateDummyKnockoutStage(), KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, team1Id, team2Id).Value;
         matchWithTeam1AsWinner.SetScores(3, 1);
         var matchWithTeam2AsWinner = KnockoutStageMatch.Create(
-            Guid.NewGuid(), KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, team1Id, team2Id).Value;
+            CreateDummyKnockoutStage(), KnockoutStageRound.QuarterFinals, KnockoutStageSide.Left, team1Id, team2Id).Value;
         matchWithTeam2AsWinner.SetScores(1, 3);
 
         Assert.Equal(team1Id, matchWithTeam1AsWinner.WinnerTeamId);
@@ -162,9 +162,12 @@ public class MatchTests
         Assert.Null(match.WinnerTeamId);
     }
 
+    private static KnockoutStage CreateDummyKnockoutStage() =>
+        (KnockoutStage)Activator.CreateInstance(typeof(KnockoutStage), nonPublic: true)!;
+
     private static KnockoutStageMatch CreateQuarterFinalMatch() =>
         KnockoutStageMatch.Create(
-            Guid.NewGuid(),
+            CreateDummyKnockoutStage(),
             KnockoutStageRound.QuarterFinals,
             KnockoutStageSide.Left,
             Guid.NewGuid(),

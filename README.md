@@ -61,9 +61,9 @@ The database schema is managed via EF migrations. Migrations are automatically a
 
 ```mermaid
 graph LR
-    User((Użytkownik)) --- API[Backend API]
-    API --- DB[(Baza Danych)]
-    API --- ExtAPI{Zewnętrzne API}
+    User((User)) --- API[Backend API]
+    API --- DB[(Database)]
+    API --- ExtAPI{External API}
 ```
 
 ---

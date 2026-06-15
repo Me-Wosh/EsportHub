@@ -1,5 +1,4 @@
 using EsportHub.Features.Teams;
-using EsportHub.UnitTests.Features;
 using Microsoft.EntityFrameworkCore;
 
 namespace EsportHub.UnitTests.Features.Teams;

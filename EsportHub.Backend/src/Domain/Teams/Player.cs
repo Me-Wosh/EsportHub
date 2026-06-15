@@ -9,13 +9,13 @@ public class Player : BaseEntity
     public Guid TeamId { get; private set; }
     public Team Team { get; private set; } = null!;
 
-    internal static Result<Player> Create(string name, Guid teamId)
+    internal static Result<Player> Create(string name, Team team)
     {
         var player = new Player();
 
         return Result.Success()
             .Bind(_ => player.UpdateName(name))
-            .Bind(_ => player.UpdateTeam(teamId));
+            .Bind(_ => player.UpdateTeam(team));
     }
 
     public Result<Player> UpdateName(string name)
@@ -37,12 +37,12 @@ public class Player : BaseEntity
         return this;
     }
 
-    private Result<Player> UpdateTeam(Guid teamId)
+    private Result<Player> UpdateTeam(Team team)
     {
-        if (teamId == Guid.Empty)
+        if (team is null)
             return Result.Invalid(new ValidationError("Player must belong to a team."));
 
-        TeamId = teamId;
+        Team = team;
         return this;
     }
 }

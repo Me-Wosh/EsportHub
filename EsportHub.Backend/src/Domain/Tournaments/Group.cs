@@ -20,13 +20,13 @@ public class Group : BaseEntity
     public IReadOnlyCollection<GroupStageMatch> Matches => _matches;
     public IReadOnlyCollection<GroupTeamStanding> Standings => _standings;
 
-    internal static Result<Group> Create(string name, Guid groupStageId)
+    internal static Result<Group> Create(string name, GroupStage groupStage)
     {
         var group = new Group();
 
         return Result.Success()
             .Bind(_ => group.UpdateName(name))
-            .Bind(_ => group.UpdateGroupStage(groupStageId));
+            .Bind(_ => group.UpdateGroupStage(groupStage));
     }
 
     public Result<Group> UpdateName(string name)
@@ -80,7 +80,7 @@ public class Group : BaseEntity
 
         foreach (var team in _teams)
         {
-            var createStandingResult = GroupTeamStanding.Create(Id, team.Id);
+            var createStandingResult = GroupTeamStanding.Create(this, team.Id);
             if (!createStandingResult.IsSuccess)
                 return createStandingResult.Map();
 
@@ -91,7 +91,7 @@ public class Group : BaseEntity
         {
             for (int j = i + 1; j < _teams.Count; j++)
             {
-                var match = GroupStageMatch.Create(Id, _teams[i].Id, _teams[j].Id);
+                var match = GroupStageMatch.Create(this, _teams[i].Id, _teams[j].Id);
                 if (!match.IsSuccess)
                     return match.Map();
 
@@ -127,12 +127,12 @@ public class Group : BaseEntity
             .ToList();
     }
 
-    private Result<Group> UpdateGroupStage(Guid groupStageId)
+    private Result<Group> UpdateGroupStage(GroupStage groupStage)
     {
-        if (groupStageId == Guid.Empty)
+        if (groupStage is null)
             return Result.Invalid(new ValidationError("Group must belong to a group stage."));
 
-        GroupStageId = groupStageId;
+        GroupStage = groupStage;
         return this;
     }
 
@@ -162,6 +162,12 @@ public class Group : BaseEntity
             var updatePositionResult = standing.UpdatePosition(index + 1);
             if (!updatePositionResult.IsSuccess)
                 return updatePositionResult.Map();
+        }
+
+        if (_standings.Select(s => s.Position).Distinct().Count() != _standings.Count)
+        {
+            return Result.Invalid(
+                new ValidationError("Standings would contain duplicate positions after recalculation."));
         }
 
         return Result.Success();
@@ -268,8 +274,11 @@ public class Group : BaseEntity
             if (!match.IsResolved)
                 continue;
 
-            if (!stats.TryGetValue(match.Team1Id, out var team1Stats) || !stats.TryGetValue(match.Team2Id, out var team2Stats))
+            if (!stats.TryGetValue(match.Team1Id, out var team1Stats) ||
+                !stats.TryGetValue(match.Team2Id, out var team2Stats))
+            {
                 continue;
+            }
 
             var team1Score = match.Team1Score!.Value;
             var team2Score = match.Team2Score!.Value;

@@ -120,5 +120,35 @@ public class TournamentEndpoints : IEndpointGroup
                 command with { TournamentId = id, GroupId = groupId, MatchId = matchId },
                 cancellationToken);
         });
+
+        group.MapGet("/{id:guid}/knockout-stage", async Task<Result<KnockoutStageResult>> (
+            Guid id,
+            IMediator mediator,
+            CancellationToken cancellationToken) =>
+        {
+            return await mediator.Send(new GetKnockoutStageQuery(id), cancellationToken);
+        });
+
+        group.MapPut(
+            "/{id:guid}/knockout-stage/matches/{matchId:guid}",
+            async Task<Result<KnockoutMatchResult>> (
+                Guid id,
+                Guid matchId,
+                [FromBody] ResolveKnockoutStageMatchCommand command,
+                IMediator mediator,
+                CancellationToken cancellationToken) =>
+        {
+            return await mediator.Send(
+                command with { TournamentId = id, MatchId = matchId },
+                cancellationToken);
+        });
+
+        group.MapPost("/{id:guid}/knockout-stage/seed", async Task<Result<KnockoutStageResult>> (
+            Guid id,
+            IMediator mediator,
+            CancellationToken cancellationToken) =>
+        {
+            return await mediator.Send(new SeedKnockoutStageMatchesCommand(id), cancellationToken);
+        });
     }
 }
