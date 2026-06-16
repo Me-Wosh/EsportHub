@@ -47,9 +47,18 @@ public class TwitchService(
 
     public async Task<Result<ChannelScheduleDto>> GetRecurringSchedulesAsync(CancellationToken cancellationToken)
     {
-        var response = await httpClient.GetAsync(
-            $"schedule?broadcaster_id={_config.BroadcasterId}",
-            cancellationToken);
+        HttpResponseMessage response;
+        try
+        {
+            response = await httpClient.GetAsync(
+                $"schedule?broadcaster_id={_config.BroadcasterId}",
+                cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Request to Twitch API failed");
+            return Result.Error("Request to Twitch API failed");
+        }
 
         if (response.StatusCode is HttpStatusCode.Unauthorized)
             return Result.Unauthorized();
@@ -107,10 +116,19 @@ public class TwitchService(
 
         var body = new TwitchCreateSegmentRequest(startTime, timezone, duration.ToString(), true, categoryId, title);
 
-        var response = await httpClient.PostAsJsonAsync(
-            $"schedule/segment?broadcaster_id={_config.BroadcasterId}",
-            body,
-            cancellationToken);
+        HttpResponseMessage response;
+        try
+        {
+            response = await httpClient.PostAsJsonAsync(
+                $"schedule/segment?broadcaster_id={_config.BroadcasterId}",
+                body,
+                cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Request to Twitch API failed");
+            return Result.Error("Request to Twitch API failed");
+        }
 
         if (response.StatusCode is HttpStatusCode.Unauthorized)
             return Result.Unauthorized();
@@ -165,7 +183,16 @@ public class TwitchService(
             query += $"&duration={duration.Value}";
         }
 
-        var response = await httpClient.PostAsync(query, null, cancellationToken);
+        HttpResponseMessage response;
+        try
+        {
+            response = await httpClient.PostAsync(query, null, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Request to Twitch API failed");
+            return Result.Error("Request to Twitch API failed");
+        }
 
         if (response.StatusCode is HttpStatusCode.Unauthorized)
             return Result.Unauthorized();
